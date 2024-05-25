@@ -28,15 +28,15 @@ button {
   position: absolute;
   width: 100%;
   height: 100%;
+  background-color: #1d1d1b;
+  padding: 20px 0;
 }
 
 body {
-  margin: 0;
-  background: linear-gradient(180deg, rgb(117, 81, 194), rgb(255, 255, 255));
   display: flex;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   justify-content: center;
   align-items: center;
 }
@@ -45,14 +45,6 @@ main {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-}
-
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
 ul {
@@ -106,4 +98,48 @@ a {
   font-family: "WedgeBrush";
   src: url("https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/fonts/wedgeBrush.woff2")
     format("woff2");
+}
+
+[data-amplify-authenticator] {
+  --amplify-components-button-primary-background-color: #ffd750;
+  --amplify-components-authenticator-router-background-color: #fffadc;
+  --amplify-components-button-primary-color: #1d1d1b;
+  --amplify-components-button-primary-focus-background-color: #ffb434;
+  --amplify-components-button-primary-hover-background-color: #ffb434;
+  --amplify-components-button-primary-active-background-color: #ffb434;
+  --amplify-components-tabs-item-active-border-color: #ffb434;
+  --amplify-components-tabs-item-hover-color: #1d1d1b;
+  --amplify-components-tabs-item-active-color: #1d1d1b;
+  --amplify-components-fieldcontrol-focus-border-color: #1d1d1b;
+  --amplify-components-fieldcontrol-focus-box-shadow: 0 0 0 2px #1d1d1b;
+  --amplify-components-button-link-color: #1d1d1b;
+}
+
+.amplify-tabs__item--active {
+  border: none;
+  background-color: #ffd750;
+}
+
+.username {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+[data-amplify-authenticator] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+[data-amplify-authenticator] [data-amplify-container] {
+  max-height: 100%;
+  display: flex;
+}
+
+[data-amplify-authenticator] [data-amplify-router] {
+  display: flex;
+  max-height: 100%;
+  overflow-y: scroll;
 }

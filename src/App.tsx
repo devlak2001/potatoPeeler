@@ -3,8 +3,181 @@ import { useState } from "react";
 // import { generateClient } from "aws-amplify/data";
 import Game from "./components/Game";
 import { Loading } from "./components/Loading";
+import {
+  Authenticator,
+  View,
+  useTheme,
+  Image,
+  Text,
+  Heading,
+  Button,
+  useAuthenticator,
+} from "@aws-amplify/ui-react";
+import "@aws-amplify/ui-react/styles.css";
 
 // const client = generateClient<Schema>();
+
+const components = {
+  SignUp: {
+    Footer() {
+      const { toSignIn } = useAuthenticator();
+
+      return (
+        <View textAlign="center">
+          <Button
+            fontWeight="normal"
+            onClick={toSignIn}
+            size="small"
+            variation="link"
+          >
+            Back to Sign In
+          </Button>
+        </View>
+      );
+    },
+  },
+  ConfirmSignUp: {
+    Header() {
+      const { tokens } = useTheme();
+      return (
+        <Heading
+          padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
+          level={3}
+        >
+          Enter Information:
+        </Heading>
+      );
+    },
+    Footer() {
+      return <Text>Footer Information</Text>;
+    },
+  },
+  SetupTotp: {
+    Header() {
+      const { tokens } = useTheme();
+      return (
+        <Heading
+          padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
+          level={3}
+        >
+          Enter Information:
+        </Heading>
+      );
+    },
+    Footer() {
+      return <Text>Footer Information</Text>;
+    },
+  },
+  ConfirmSignIn: {
+    Header() {
+      const { tokens } = useTheme();
+      return (
+        <Heading
+          padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
+          level={3}
+        >
+          Enter Information:
+        </Heading>
+      );
+    },
+    Footer() {
+      return <Text>Footer Information</Text>;
+    },
+  },
+  ForgotPassword: {
+    Header() {
+      const { tokens } = useTheme();
+      return (
+        <Heading
+          padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
+          level={3}
+        >
+          Enter Information:
+        </Heading>
+      );
+    },
+    Footer() {
+      return <Text>Footer Information</Text>;
+    },
+  },
+  ConfirmResetPassword: {
+    Header() {
+      const { tokens } = useTheme();
+      return (
+        <Heading
+          padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
+          level={3}
+        >
+          Enter Information:
+        </Heading>
+      );
+    },
+    Footer() {
+      return <Text>Footer Information</Text>;
+    },
+  },
+};
+
+const formFields = {
+  signIn: {
+    username: {
+      placeholder: "Enter your email",
+    },
+  },
+  signUp: {
+    password: {
+      label: "Password:",
+      placeholder: "Enter your Password:",
+      isRequired: false,
+    },
+    confirm_password: {
+      label: "Confirm Password:",
+    },
+    preferred_username: {
+      label: "Username",
+      placeholder: "Enter your Username:",
+      order: 1,
+    },
+  },
+  forceNewPassword: {
+    password: {
+      placeholder: "Enter your Password:",
+    },
+  },
+  forgotPassword: {
+    username: {
+      placeholder: "Enter your email:",
+    },
+  },
+  confirmResetPassword: {
+    confirmation_code: {
+      placeholder: "Enter your Confirmation Code:",
+      label: "New Label",
+      isRequired: false,
+    },
+    confirm_password: {
+      placeholder: "Enter your Password Please:",
+    },
+  },
+  setupTotp: {
+    QR: {
+      totpIssuer: "test issuer",
+      totpUsername: "amplify_qr_test_user",
+    },
+    confirmation_code: {
+      label: "New Label",
+      placeholder: "Enter your Confirmation Code:",
+      isRequired: false,
+    },
+  },
+  confirmSignIn: {
+    confirmation_code: {
+      label: "New Label",
+      placeholder: "Enter your Confirmation Code:",
+      isRequired: false,
+    },
+  },
+};
 
 function App() {
   // const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
@@ -39,8 +212,18 @@ function App() {
     //   </div>
     // </main>
     <>
-      <Loading setShowGame={setShowGame} />
-      {showGame && <Game />}
+      <Authenticator
+        formFields={formFields}
+        components={components}
+        signUpAttributes={["preferred_username"]}
+      >
+        {({ signOut }) => (
+          <>
+            <Loading setShowGame={setShowGame} />
+            {showGame && <Game signOut={signOut} />}
+          </>
+        )}
+      </Authenticator>
     </>
   );
 }

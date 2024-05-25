@@ -5,6 +5,8 @@ export const LeavePopup = ({
   link,
   leaveButtonOnClick,
   stayButtonOnClick,
+  text,
+  leaveBtnText,
 }: any) => {
   const [mounted, setMounted] = useState(false);
   const [animateOut, setAnimateOut] = useState(false);
@@ -27,8 +29,7 @@ export const LeavePopup = ({
             className="bkg"
           />
           <div className="text1">Whoa!</div>
-          <div className="text2">wanna try again?</div>
-          <div className="text3">You sure about this?</div>
+          {text}
           <button
             className="primaryButton"
             onClick={() => {
@@ -59,7 +60,7 @@ export const LeavePopup = ({
                 }
               }}
             >
-              LEAVE
+              {leaveBtnText}
             </button>
           )}
 

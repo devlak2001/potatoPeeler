@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import "../styles/Minigame.scss";
 import { LeavePopup } from "./popups/LeavePopup";
 import { preloadImages } from "../utils/preloadImages";
+import { fetchUserAttributes } from "aws-amplify/auth";
 
 const randomIntFromInterval = (min: number, max: number) => {
   // min and max included
@@ -21,7 +22,7 @@ export type MiniGameProps = {
   //   setShowMainMenu: (show: boolean) => void;
 };
 
-export default function Game() {
+export default function Game({ signOut }: any) {
   // const miniGameTimerRef = useRef<NodeJS.Timer>();
 
   const gameWrapper = useRef<HTMLDivElement>(null);
@@ -59,6 +60,10 @@ export default function Game() {
       "https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/popups/leavePopupBkg.png",
       "https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/popups/wormy.png",
     ]);
+    (async () => {
+      const attributes = await fetchUserAttributes();
+      console.log(attributes);
+    })();
   }, []);
 
   useEffect(() => {
@@ -521,12 +526,12 @@ export default function Game() {
               <AnimatedNumber number={score} />
             </div>
           </div>
-          {/* <button
+          <button
             className="exitButton"
             onClick={() => {
               gamePausedRef.current = true;
               lastPauseTimestamp.current = Date.now();
-              setHomeBtnClicked(true);
+              setExitBtnClicked(true);
             }}
             onTouchStart={(e) => {
               e.currentTarget.classList.add("interactedWith");
@@ -537,18 +542,41 @@ export default function Game() {
             }}
           >
             <svg
-              width="13"
-              height="13"
-              viewBox="0 0 13 13"
-              fill="none"
+              fill="#000000"
+              height="800px"
+              width="800px"
+              version="1.1"
+              id="Layer_1"
               xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 330 330"
             >
-              <path
-                d="M8.22091 6.58326L12.6463 2.15792C12.8563 1.94826 12.9744 1.66376 12.9747 1.367C12.9749 1.07024 12.8573 0.785534 12.6477 0.575509C12.438 0.365483 12.1535 0.247344 11.8567 0.247082C11.56 0.24682 11.2753 0.364456 11.0652 0.574111L6.6399 4.99945L2.21456 0.574111C2.00453 0.364085 1.71968 0.246094 1.42266 0.246094C1.12563 0.246094 0.840778 0.364085 0.630752 0.574111C0.420726 0.784137 0.302734 1.06899 0.302734 1.36601C0.302734 1.66304 0.420726 1.94789 0.630752 2.15792L5.0561 6.58326L0.630752 11.0086C0.420726 11.2186 0.302734 11.5035 0.302734 11.8005C0.302734 12.0975 0.420726 12.3824 0.630752 12.5924C0.840778 12.8024 1.12563 12.9204 1.42266 12.9204C1.71968 12.9204 2.00453 12.8024 2.21456 12.5924L6.6399 8.16707L11.0652 12.5924C11.2753 12.8024 11.5601 12.9204 11.8571 12.9204C12.1542 12.9204 12.439 12.8024 12.6491 12.5924C12.8591 12.3824 12.9771 12.0975 12.9771 11.8005C12.9771 11.5035 12.8591 11.2186 12.6491 11.0086L8.22091 6.58326Z"
-                fill="#1D1D1B"
-              />
+              <g id="XMLID_2_">
+                <path
+                  id="XMLID_4_"
+                  d="M51.213,180h173.785c8.284,0,15-6.716,15-15s-6.716-15-15-15H51.213l19.394-19.393
+		c5.858-5.857,5.858-15.355,0-21.213c-5.856-5.858-15.354-5.858-21.213,0L4.397,154.391c-0.348,0.347-0.676,0.71-0.988,1.09
+		c-0.076,0.093-0.141,0.193-0.215,0.288c-0.229,0.291-0.454,0.583-0.66,0.891c-0.06,0.09-0.109,0.185-0.168,0.276
+		c-0.206,0.322-0.408,0.647-0.59,0.986c-0.035,0.067-0.064,0.138-0.099,0.205c-0.189,0.367-0.371,0.739-0.53,1.123
+		c-0.02,0.047-0.034,0.097-0.053,0.145c-0.163,0.404-0.314,0.813-0.442,1.234c-0.017,0.053-0.026,0.108-0.041,0.162
+		c-0.121,0.413-0.232,0.83-0.317,1.257c-0.025,0.127-0.036,0.258-0.059,0.386c-0.062,0.354-0.124,0.708-0.159,1.069
+		C0.025,163.998,0,164.498,0,165s0.025,1.002,0.076,1.498c0.035,0.366,0.099,0.723,0.16,1.08c0.022,0.124,0.033,0.251,0.058,0.374
+		c0.086,0.431,0.196,0.852,0.318,1.269c0.015,0.049,0.024,0.101,0.039,0.15c0.129,0.423,0.28,0.836,0.445,1.244
+		c0.018,0.044,0.031,0.091,0.05,0.135c0.16,0.387,0.343,0.761,0.534,1.13c0.033,0.065,0.061,0.133,0.095,0.198
+		c0.184,0.341,0.387,0.669,0.596,0.994c0.056,0.088,0.104,0.181,0.162,0.267c0.207,0.309,0.434,0.603,0.662,0.895
+		c0.073,0.094,0.138,0.193,0.213,0.285c0.313,0.379,0.641,0.743,0.988,1.09l44.997,44.997C52.322,223.536,56.161,225,60,225
+		s7.678-1.464,10.606-4.394c5.858-5.858,5.858-15.355,0-21.213L51.213,180z"
+                />
+                <path
+                  id="XMLID_5_"
+                  d="M207.299,42.299c-40.944,0-79.038,20.312-101.903,54.333c-4.62,6.875-2.792,16.195,4.083,20.816
+		c6.876,4.62,16.195,2.794,20.817-4.083c17.281-25.715,46.067-41.067,77.003-41.067C258.414,72.299,300,113.884,300,165
+		s-41.586,92.701-92.701,92.701c-30.845,0-59.584-15.283-76.878-40.881c-4.639-6.865-13.961-8.669-20.827-4.032
+		c-6.864,4.638-8.67,13.962-4.032,20.826c22.881,33.868,60.913,54.087,101.737,54.087C274.956,287.701,330,232.658,330,165
+		S274.956,42.299,207.299,42.299z"
+                />
+              </g>
             </svg>
-          </button> */}
+          </button>
         </div>
         <div className="potatoGame" ref={gameWrapper}>
           <div className="peelers">
@@ -600,6 +628,13 @@ export default function Game() {
                 setGamePaused(false);
               }, 250);
             }}
+            text={
+              <>
+                <div className="text2">wanna try again?</div>
+                <div className="text3">You sure about this?</div>
+              </>
+            }
+            leaveBtnText={"RESTART"}
             leaveButtonOnClick={() => {
               setTimeout(() => {
                 window.location.reload();
@@ -617,11 +652,17 @@ export default function Game() {
                 setExitBtnClicked(false);
               }, 250);
             }}
+            text={
+              <>
+                <div className="text2">wanna log out?</div>
+                <div className="text3">You sure about this?</div>
+              </>
+            }
+            leaveBtnText={"LOG OUT"}
             leaveButtonOnClick={() => {
               setAnimateOut(true);
-              setTimeout(() => {
-                window.location.reload();
-              }, 250);
+              signOut();
+              window.location.reload();
             }}
           />
         )}
@@ -652,6 +693,13 @@ export default function Game() {
                   setGamePaused(false);
                 }, 250);
               }}
+              text={
+                <>
+                  <div className="text2">wanna try again?</div>
+                  <div className="text3">You sure about this?</div>
+                </>
+              }
+              leaveBtnText={"RESTART"}
               leaveButtonOnClick={() => {
                 setAnimateOut(true);
                 setTimeout(() => {
@@ -661,6 +709,7 @@ export default function Game() {
             />
           )}
         {gameEnded && <></>}
+        <div className="username">{}</div>
       </div>
     </>
   );
