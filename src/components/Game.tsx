@@ -21,7 +21,7 @@ export type MiniGameProps = {
   //   setShowMainMenu: (show: boolean) => void;
 };
 
-export default function Game(props: MiniGameProps) {
+export default function Game() {
   // const miniGameTimerRef = useRef<NodeJS.Timer>();
 
   const gameWrapper = useRef<HTMLDivElement>(null);
@@ -31,11 +31,9 @@ export default function Game(props: MiniGameProps) {
   const timePaused = useRef(0);
   const lastPauseTimestamp = useRef(Date.now());
 
-  const [friesPopupSkipped, setFriesPopupSkipped] = useState(false);
-
   const [homeBtnClicked, setHomeBtnClicked] = useState(false);
   const [exitBtnClicked, setExitBtnClicked] = useState(false);
-  const [infoBtnClicked, setInfoBtnClicked] = useState(false);
+  const [infoBtnClicked] = useState(false);
   const [animateOut, setAnimateOut] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
 
@@ -55,11 +53,6 @@ export default function Game(props: MiniGameProps) {
   //       setAnimateSignUp(true);
   //     }
   //   }, [showSignUp]);
-
-  useEffect(() => {
-    if (gameEnded && friesPopupSkipped) {
-    }
-  }, [gameEnded, friesPopupSkipped]);
 
   useEffect(() => {
     preloadImages([

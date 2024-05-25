@@ -31,7 +31,7 @@ export const LeavePopup = ({
           <div className="text3">You sure about this?</div>
           <button
             className="primaryButton"
-            onClick={(e) => {
+            onClick={() => {
               setAnimateOut(true);
               stayButtonOnClick();
             }}
@@ -52,7 +52,7 @@ export const LeavePopup = ({
           ) : (
             <button
               className="leaveButton"
-              onClick={(e) => {
+              onClick={() => {
                 setAnimateOut(true);
                 if (leaveButtonOnClick) {
                   leaveButtonOnClick();
