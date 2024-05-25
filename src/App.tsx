@@ -7,7 +7,6 @@ import {
   Authenticator,
   View,
   useTheme,
-  Image,
   Text,
   Heading,
   Button,
