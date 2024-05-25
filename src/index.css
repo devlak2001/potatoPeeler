@@ -1,3 +1,35 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+button {
+  appearance: none;
+  border: none;
+  outline: none;
+  background: none;
+  font-size: inherit;
+}
+
+.primaryButton {
+  border-radius: 1.6em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "RooneySansBlack";
+  color: black;
+  background-color: #ffd750;
+  box-shadow: 0px 4.661px 4.661px 0px rgba(0, 0, 0, 0.25),
+    0px 1.165px 1.165px 0px rgba(0, 0, 0, 0.7);
+}
+
+#root {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
 body {
   margin: 0;
   background: linear-gradient(180deg, rgb(117, 81, 194), rgb(255, 255, 255));
@@ -15,18 +47,6 @@ main {
   align-items: stretch;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-  color: white;
-}
 button:hover {
   border-color: #646cff;
 }
@@ -62,4 +82,28 @@ li:hover {
 a {
   font-weight: 800;
   text-decoration: none;
+}
+
+@font-face {
+  font-family: "RooneySansBold";
+  src: url("https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/fonts/RooneySansBold.woff2")
+    format("woff2");
+}
+
+@font-face {
+  font-family: "RooneySansBlack";
+  src: url("https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/fonts/RooneySansBlack.woff2")
+    format("woff2");
+}
+
+@font-face {
+  font-family: "RooneySansMedium";
+  src: url("https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/fonts/RooneySansMedium.woff2")
+    format("woff2");
+}
+
+@font-face {
+  font-family: "WedgeBrush";
+  src: url("https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/fonts/wedgeBrush.woff2")
+    format("woff2");
 }
