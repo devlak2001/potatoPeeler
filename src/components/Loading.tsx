@@ -15,6 +15,9 @@ const images = [
   "https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/game/cuttingBoard.png",
   "https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/game/bkg.png",
   "https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/game/fryPointsBkg.png",
+  "https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/game/stoneFragment.svg",
+  "https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/game/heartLivesBkg.png",
+  "https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/game/heart.png",
 ];
 
 export const Loading = ({ setShowGame }: any) => {

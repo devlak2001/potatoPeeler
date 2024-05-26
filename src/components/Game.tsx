@@ -37,6 +37,7 @@ export default function Game({ signOut }: any) {
   const [infoBtnClicked] = useState(false);
   const [animateOut, setAnimateOut] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
+  const [lives, setLives] = useState(5);
 
   const [score, setScore] = useState("000");
   const potatoesNumberStartValue = 0;
@@ -65,6 +66,13 @@ export default function Game({ signOut }: any) {
       console.log(attributes);
     })();
   }, []);
+
+  useEffect(() => {
+    if (lives === 0) {
+      setGameEnded(true);
+      window.location.reload();
+    }
+  }, [lives]);
 
   useEffect(() => {
     let start = Date.now(),
@@ -151,22 +159,30 @@ export default function Game({ signOut }: any) {
       // Here it is randomly decided how many potatoes will be generated in one potatoRow
       const numPotatoes = Math.random() < 0.5 ? 1 : 2;
       const columns = [1, 2, 3];
-      for (let i = 0; i < numPotatoes; i++) {
+      for (let i = 0; i < 3; i++) {
         // Here we chose the random column to which we will add the potato
         const randomIndex = Math.floor(Math.random() * columns.length);
 
-        const potato = document.createElement("div");
-        potato.style.gridColumn = `${columns[randomIndex]}`;
-        potato.dataset.column = `${columns[randomIndex]}`;
-        potato.className = "potato";
-        potatoRow.append(potato);
+        if (i < numPotatoes) {
+          const potato = document.createElement("div");
+          potato.style.gridColumn = `${columns[randomIndex]}`;
+          potato.dataset.column = `${columns[randomIndex]}`;
+          potato.className = "potato";
+          potatoRow.append(potato);
 
-        // Here we decrease the number of potatoes that are left
-        // I am using both ref value and set function because we are trying not to use state variable directly inside this effect because then we have to add it to dependency array
-        potatoesNumberRef.current++;
-        setPotatoesNumber(
-          potatoesNumberRef.current.toString().padStart(3, "0")
-        );
+          // Here we decrease the number of potatoes that are left
+          // I am using both ref value and set function because we are trying not to use state variable directly inside this effect because then we have to add it to dependency array
+          potatoesNumberRef.current++;
+          setPotatoesNumber(
+            potatoesNumberRef.current.toString().padStart(3, "0")
+          );
+        } else {
+          const stone = document.createElement("div");
+          stone.style.gridColumn = `${columns[randomIndex]}`;
+          stone.dataset.column = `${columns[randomIndex]}`;
+          stone.className = "stone";
+          potatoRow.append(stone);
+        }
 
         // Here we remove the column index that was previously chosen, so in the next iteration of for loop, we can't randomly chose the same column
         columns.splice(randomIndex, 1);
@@ -183,7 +199,8 @@ export default function Game({ signOut }: any) {
       const currentTarget = e.target;
       // In this if statement, we check if user touched potato, and if the potato that was touched is on the cutting board
       if (
-        (currentTarget as HTMLElement).classList.contains("potato") &&
+        ((currentTarget as HTMLElement).classList.contains("potato") ||
+          (currentTarget as HTMLElement).classList.contains("stone")) &&
         (currentTarget as HTMLElement).getBoundingClientRect().top +
           (currentTarget as HTMLElement).clientHeight >
           peelersOffsetTop &&
@@ -203,8 +220,13 @@ export default function Game({ signOut }: any) {
         }, 0);
 
         const scoreIncrementIndicator = document.createElement("div");
-        scoreIncrementIndicator.textContent = `+${10}`;
-        scoreIncrementIndicator.className = "scoreIncrementIndicator";
+        if ((currentTarget as HTMLElement).classList.contains("potato")) {
+          scoreIncrementIndicator.textContent = `+${10}`;
+          scoreIncrementIndicator.className = "scoreIncrementIndicator";
+        } else {
+          scoreIncrementIndicator.textContent = `-${1}`;
+          scoreIncrementIndicator.className = "livesDecrementIndicator";
+        }
 
         gameWrapper.current!.append(scoreIncrementIndicator);
 
@@ -244,16 +266,30 @@ export default function Game({ signOut }: any) {
         }, 500);
 
         //Score calulation
-        setScore((score) => (Number(score) + 10).toFixed(0).padStart(3, "0"));
-
-        if (e.type === "touchstart") {
-          // Handle touchstart event
-          generateFries(
-            e.changedTouches[0].clientX,
-            e.changedTouches[0].clientY
-          );
-        } else if (e.type === "mousedown") {
-          generateFries(e.clientX, e.clientY);
+        if ((currentTarget as HTMLElement).classList.contains("potato")) {
+          setScore((score) => (Number(score) + 10).toFixed(0).padStart(3, "0"));
+          if (e.type === "touchstart") {
+            // Handle touchstart event
+            generateFries(
+              e.changedTouches[0].clientX,
+              e.changedTouches[0].clientY,
+              "potato"
+            );
+          } else if (e.type === "mousedown") {
+            generateFries(e.clientX, e.clientY, "potato");
+          }
+        } else {
+          setLives((lives) => lives - 1);
+          if (e.type === "touchstart") {
+            // Handle touchstart event
+            generateFries(
+              e.changedTouches[0].clientX,
+              e.changedTouches[0].clientY,
+              "stone"
+            );
+          } else if (e.type === "mousedown") {
+            generateFries(e.clientX, e.clientY, "stone");
+          }
         }
       } else {
         const scoreIncrementIndicator = document.createElement("div");
@@ -311,12 +347,14 @@ export default function Game({ signOut }: any) {
     gameWrapper.current!.addEventListener("mousedown", gameWrapperOnTouchStart);
 
     // function that generates fries that fall down if you succeed in cutting potato
-    const generateFries = (x: number, y: number) => {
+    const generateFries = (x: number, y: number, type: string) => {
       const documentFragment = document.createDocumentFragment();
       for (let i = 0; i < 10; i++) {
         const generatedFry = document.createElement("img");
         generatedFry.src =
-          "https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/game/fry.png";
+          type === "potato"
+            ? "https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/game/fry.png"
+            : "https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/game/stoneFragment.svg";
         generatedFry.className = "generatedFry";
         documentFragment.appendChild(generatedFry);
 
@@ -426,7 +464,10 @@ export default function Game({ signOut }: any) {
 
   return (
     <>
-      <div className={`minigame ${animateOut ? "animateOut" : ""}`}>
+      <div
+        className={`minigame ${animateOut ? "animateOut" : ""}`}
+        style={{ pointerEvents: lives === 0 ? "none" : "all" }}
+      >
         <img
           className="conveyorBelt"
           src="https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/game/conveyorBelt.png"
@@ -557,6 +598,21 @@ export default function Game({ signOut }: any) {
               }`}
             >
               <AnimatedNumber number={score} />
+            </div>
+          </div>
+          <div className="lives">
+            <img
+              src="https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/game/fryNumberBkg.png"
+              alt=""
+              className="bkg"
+            />
+            <img
+              className="heart"
+              src="https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/game/heart.png"
+              alt=""
+            />
+            <div className={`digitsWrapper`}>
+              <AnimatedNumber number={lives.toString()} />
             </div>
           </div>
           <button
@@ -741,7 +797,11 @@ export default function Game({ signOut }: any) {
               }}
             />
           )}
-        {gameEnded && <></>}
+        {gameEnded && (
+          <>
+            <div className="endGame"></div>
+          </>
+        )}
         <div className="username">{}</div>
       </div>
     </>
