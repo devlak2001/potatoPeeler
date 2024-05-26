@@ -11,7 +11,7 @@
   font-size: 8vw;
   background: url("https://devlak2001.s3.eu-central-1.amazonaws.com/potatoPeeler/game/bkg.png");
   background-position: center;
-  background-size: cover;
+  background-size: auto 100%;
 
   button {
     color: black;
@@ -398,6 +398,9 @@
         width: 100%;
       }
     }
+  }
+  @media (min-aspect-ratio: 375 / 680) {
+    font-size: 4.41dvh;
   }
 }
 

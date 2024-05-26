@@ -176,7 +176,7 @@ export default function Game({ signOut }: any) {
     };
 
     // function that handles touchstart event on minigame screen
-    const gameWrapperOnTouchStart = (e: TouchEvent) => {
+    const gameWrapperOnTouchStart = (e: any) => {
       // There was some issues with touchstart event on google on iOS, so I added this and it fixed it
       e.preventDefault();
 
@@ -208,12 +208,24 @@ export default function Game({ signOut }: any) {
 
         gameWrapper.current!.append(scoreIncrementIndicator);
 
-        scoreIncrementIndicator.style.top = `${
-          e.changedTouches[0].clientY - scoreIncrementIndicator.clientHeight / 2
-        }px`;
-        scoreIncrementIndicator.style.left = `${
-          e.changedTouches[0].clientX - scoreIncrementIndicator.clientWidth / 2
-        }px`;
+        if (e.type === "touchstart") {
+          // Handle touchstart event
+          scoreIncrementIndicator.style.top = `${
+            e.changedTouches[0].clientY -
+            scoreIncrementIndicator.clientHeight / 2
+          }px`;
+          scoreIncrementIndicator.style.left = `${
+            e.changedTouches[0].clientX -
+            scoreIncrementIndicator.clientWidth / 2
+          }px`;
+        } else if (e.type === "mousedown") {
+          scoreIncrementIndicator.style.top = `${
+            e.clientY - scoreIncrementIndicator.clientHeight / 2
+          }px`;
+          scoreIncrementIndicator.style.left = `${
+            e.clientX - scoreIncrementIndicator.clientWidth / 2
+          }px`;
+        }
 
         // Here we are using setTimeout that basically triggers instantly just so we can re-trigger CSS transition, because just changing CSS property alone won't do anything
         setTimeout(() => {
@@ -234,7 +246,15 @@ export default function Game({ signOut }: any) {
         //Score calulation
         setScore((score) => (Number(score) + 10).toFixed(0).padStart(3, "0"));
 
-        generateFries(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+        if (e.type === "touchstart") {
+          // Handle touchstart event
+          generateFries(
+            e.changedTouches[0].clientX,
+            e.changedTouches[0].clientY
+          );
+        } else if (e.type === "mousedown") {
+          generateFries(e.clientX, e.clientY);
+        }
       } else {
         const scoreIncrementIndicator = document.createElement("div");
         scoreIncrementIndicator.textContent = "-5";
@@ -242,12 +262,24 @@ export default function Game({ signOut }: any) {
 
         gameWrapper.current!.append(scoreIncrementIndicator);
 
-        scoreIncrementIndicator.style.top = `${
-          e.changedTouches[0].clientY - scoreIncrementIndicator.clientHeight / 2
-        }px`;
-        scoreIncrementIndicator.style.left = `${
-          e.changedTouches[0].clientX - scoreIncrementIndicator.clientWidth / 2
-        }px`;
+        if (e.type === "touchstart") {
+          // Handle touchstart event
+          scoreIncrementIndicator.style.top = `${
+            e.changedTouches[0].clientY -
+            scoreIncrementIndicator.clientHeight / 2
+          }px`;
+          scoreIncrementIndicator.style.left = `${
+            e.changedTouches[0].clientX -
+            scoreIncrementIndicator.clientWidth / 2
+          }px`;
+        } else if (e.type === "mousedown") {
+          scoreIncrementIndicator.style.top = `${
+            e.clientY - scoreIncrementIndicator.clientHeight / 2
+          }px`;
+          scoreIncrementIndicator.style.left = `${
+            e.clientX - scoreIncrementIndicator.clientWidth / 2
+          }px`;
+        }
 
         // Here we are using setTimeout that basically triggers instantly just so we can re-trigger CSS transition, because just changing CSS property alone won't do anything
         setTimeout(() => {
@@ -276,6 +308,7 @@ export default function Game({ signOut }: any) {
       "touchstart",
       gameWrapperOnTouchStart
     );
+    gameWrapper.current!.addEventListener("mousedown", gameWrapperOnTouchStart);
 
     // function that generates fries that fall down if you succeed in cutting potato
     const generateFries = (x: number, y: number) => {
@@ -355,15 +388,15 @@ export default function Game({ signOut }: any) {
           if (value < 1) {
             el.style.bottom = `${
               window.innerHeight -
-              window.innerWidth * 0.115 -
+              peelersHeight * 0.2 -
               32 -
-              (window.innerHeight + window.innerWidth / 3) * value
+              (window.innerHeight + peelersHeight * 1.2) * value
             }px`;
           }
         });
 
         // Here we check if potatoRow that is closes to top of the screen is fully visible, if it is, we generate another potatoRow
-        if (potatoRows![0].offsetTop > peelersHeight * 1.2) {
+        if (potatoRows![0].offsetTop > peelersHeight * 0.8) {
           // We are adding elapsedTime to generated potatoRow, so we can use that value later for animating each potatoRow differently
           generatePotatoes(elapsed);
         }

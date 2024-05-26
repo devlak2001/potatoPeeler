@@ -126,5 +126,8 @@
         color: #ff7300;
       }
     }
+    @media (min-aspect-ratio: 375 / 550) {
+      font-size: 4dvh;
+    }
   }
 }
