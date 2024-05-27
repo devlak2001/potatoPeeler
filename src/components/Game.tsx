@@ -2,7 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import "../styles/Minigame.scss";
 import { LeavePopup } from "./popups/LeavePopup";
 import { preloadImages } from "../utils/preloadImages";
-import { fetchUserAttributes } from "aws-amplify/auth";
+import {
+  FetchUserAttributesOutput,
+  fetchUserAttributes,
+} from "aws-amplify/auth";
+
+import { generateClient } from "aws-amplify/data";
+import { type Schema } from "../../amplify/data/resource";
+
+const client = generateClient<Schema>();
 
 const randomIntFromInterval = (min: number, max: number) => {
   // min and max included
@@ -22,7 +30,7 @@ export type MiniGameProps = {
   //   setShowMainMenu: (show: boolean) => void;
 };
 
-export default function Game({ signOut }: any) {
+export default function Game({ signOut, scores }: any) {
   // const miniGameTimerRef = useRef<NodeJS.Timer>();
 
   const gameWrapper = useRef<HTMLDivElement>(null);
@@ -31,6 +39,9 @@ export default function Game({ signOut }: any) {
   const [gamePuased, setGamePaused] = useState(false);
   const timePaused = useRef(0);
   const lastPauseTimestamp = useRef(Date.now());
+  const [userInfo, setUserInfo] = useState<FetchUserAttributesOutput | null>(
+    null
+  );
 
   const [homeBtnClicked, setHomeBtnClicked] = useState(false);
   const [exitBtnClicked, setExitBtnClicked] = useState(false);
@@ -64,15 +75,38 @@ export default function Game({ signOut }: any) {
     (async () => {
       const attributes = await fetchUserAttributes();
       console.log(attributes);
+      setUserInfo(attributes);
     })();
   }, []);
 
   useEffect(() => {
-    if (lives === 0) {
-      setGameEnded(true);
-      window.location.reload();
+    if (lives === 0 && userInfo) {
+      (async () => {
+        setGameEnded(true);
+        if (scores.some((record: any) => record.email === userInfo.email)) {
+          const foundUser = scores.find(
+            (record: any) => record.email === userInfo.email
+          );
+          if (foundUser.score < score) {
+            await client.models.Score.update({
+              id: foundUser.id,
+              score: Number(score),
+            });
+            window.location.reload();
+          }
+          console.log("User Found");
+        } else {
+          console.log("User Not Found");
+          await client.models.Score.create({
+            email: userInfo.email,
+            username: userInfo.preferred_username,
+            score: Number(score),
+          });
+          window.location.reload();
+        }
+      })();
     }
-  }, [lives]);
+  }, [lives, userInfo, scores, score]);
 
   useEffect(() => {
     let start = Date.now(),

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import type { Schema } from "../amplify/data/resource";
 // import { generateClient } from "aws-amplify/data";
 import Game from "./components/Game";
@@ -13,6 +13,8 @@ import {
   useAuthenticator,
 } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
+import { generateClient } from "aws-amplify/data";
+import { Schema } from "../amplify/data/resource.ts";
 
 // const client = generateClient<Schema>();
 
@@ -177,19 +179,20 @@ const formFields = {
     },
   },
 };
+const client = generateClient<Schema>();
 
 function App() {
-  // const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+  const [scores, setScores] = useState<Schema["Score"]["type"][]>([]);
 
-  // useEffect(() => {
-  //   client.models.Todo.observeQuery().subscribe({
-  //     next: (data) => setTodos([...data.items]),
-  //   });
-  // }, []);
+  const fetchScores = async () => {
+    const { data: items } = await client.models.Score.list();
+    console.log(items);
+    setScores(items);
+  };
 
-  // function createTodo() {
-  //   client.models.Todo.create({ content: window.prompt("Todo content") });
-  // }
+  useEffect(() => {
+    fetchScores();
+  }, []);
 
   const [showGame, setShowGame] = useState(false);
 
@@ -219,7 +222,7 @@ function App() {
         {({ signOut }) => (
           <>
             <Loading setShowGame={setShowGame} />
-            {showGame && <Game signOut={signOut} />}
+            {showGame && <Game signOut={signOut} scores={scores} />}
           </>
         )}
       </Authenticator>
