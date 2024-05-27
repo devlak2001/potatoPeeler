@@ -92,8 +92,10 @@ export default function Game({ signOut, scores }: any) {
               id: foundUser.id,
               score: Number(score),
             });
-            window.location.reload();
-          }
+		window.location.reload();
+          } else {
+		  window.location.reload();
+	  }
           console.log("User Found");
         } else {
           console.log("User Not Found");
