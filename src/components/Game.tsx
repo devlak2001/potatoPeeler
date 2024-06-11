@@ -9,6 +9,8 @@ import {
 
 import { generateClient } from "aws-amplify/data";
 import { type Schema } from "../../amplify/data/resource";
+import { Leaderboard } from "./Leaderboard";
+import { createPortal } from "react-dom";
 
 const client = generateClient<Schema>();
 
@@ -56,6 +58,7 @@ export default function Game({ signOut, scores }: any) {
   const [potatoesNumber, setPotatoesNumber] = useState(
     potatoesNumberRef.current.toString()
   );
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   //   useEffect(() => {
   //     preloadImages(images);
@@ -83,6 +86,7 @@ export default function Game({ signOut, scores }: any) {
     if (lives === 0 && userInfo) {
       (async () => {
         setGameEnded(true);
+        setGamePaused(true);
         if (scores.some((record: any) => record.email === userInfo.email)) {
           const foundUser = scores.find(
             (record: any) => record.email === userInfo.email
@@ -92,10 +96,10 @@ export default function Game({ signOut, scores }: any) {
               id: foundUser.id,
               score: Number(score),
             });
-		window.location.reload();
+            setShowLeaderboard(true);
           } else {
-		  window.location.reload();
-	  }
+            setShowLeaderboard(true);
+          }
           console.log("User Found");
         } else {
           console.log("User Not Found");
@@ -104,7 +108,7 @@ export default function Game({ signOut, scores }: any) {
             username: userInfo.preferred_username,
             score: Number(score),
           });
-          window.location.reload();
+          setShowLeaderboard(true);
         }
       })();
     }
@@ -838,7 +842,8 @@ export default function Game({ signOut, scores }: any) {
             <div className="endGame"></div>
           </>
         )}
-        <div className="username">{}</div>
+        {showLeaderboard &&
+          createPortal(<Leaderboard userInfo={userInfo} />, document.body)}
       </div>
     </>
   );
